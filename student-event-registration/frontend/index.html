@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Student Registration</h1>
+  <form id="studentForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+    <select id="department" required>
+      <option value="">Select Department</option>
+      <option value="IT">IT</option>
+      <option value="Business">Business</option>
+      <option value="Engineering">Engineering</option>
+    </select>
+    <select id="year" required>
+      <option value="">Select Year</option>
+      <option value="1st">1st Year</option>
+      <option value="2nd">2nd Year</option>
+      <option value="3rd">3rd Year</option>
+      <option value="4th">4th Year</option>
+    </select>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    document.getElementById('studentForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const department = document.getElementById('department').value;
+      const year = document.getElementById('year').value;
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+      }
+
+      const response = await fetch('http://localhost:3000/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, department, year })
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    });
+  </script>
+</body>
+</html>

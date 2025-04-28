@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Event Registration</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Event Registration</h1>
+  <form id="registrationForm">
+    <input type="email" id="studentEmail" placeholder="Your Email" required>
+    <select id="eventId" required></select>
+    <select id="registrationType" required>
+      <option value="">Select Type</option>
+      <option value="Guest">Guest</option>
+      <option value="Participant">Participant</option>
+    </select>
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    async function loadEvents() {
+      const response = await fetch('http://localhost:3000/events');
+      const events = await response.json();
+      const select = document.getElementById('eventId');
+
+      events.forEach(event => {
+        const option = document.createElement('option');
+        option.value = event._id;
+        option.textContent = event.name;
+        select.appendChild(option);
+      });
+    }
+
+    loadEvents();
+
+    document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const studentEmail = document.getElementById('studentEmail').value;
+      const eventId = document.getElementById('eventId').value;
+      const registrationType = document.getElementById('registrationType').value;
+
+      const response = await fetch('http://localhost:3000/registrations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentEmail, eventId, registrationType })
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    });
+  </script>
+</body>
+</html>
